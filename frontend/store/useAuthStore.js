@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import axios from 'axios';
 
+
 const API_URL = 'http://localhost:5000/api/auth';
 const FAQ_URL = 'http://localhost:5000/api/faq';
 
@@ -88,6 +89,8 @@ const useAuthStore = create(
           error: null,
         });
         localStorage.removeItem("token");
+
+       
       },
 
       // ✅ CHANGE PASSWORD FUNCTION

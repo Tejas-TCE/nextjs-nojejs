@@ -325,7 +325,7 @@ export default function FAQPage() {
         <div className="mt-6 flex flex-wrap justify-center items-center gap-2">
           <button
             onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
-            disabled={currentPage === 1}
+            disabled={currentPage === 1||totalPages === 0}
             className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-2 border border-gray-300 rounded-md text-xs sm:text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
           >
             <FaChevronLeft className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
@@ -420,13 +420,15 @@ export default function FAQPage() {
 
           <button
             onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
-            disabled={currentPage === totalPages}
+            disabled={currentPage === totalPages || totalPages === 0}
             className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-2 border border-gray-300 rounded-md text-xs sm:text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
           >
             <span className="hidden sm:inline">Next</span>
             <FaChevronRight className="h-3 w-3 sm:h-4 sm:w-4 ml-1" />
           </button>
         </div>
+
+
 
         {/* Add FAQ Modal */}
         {isAddingFAQ && (

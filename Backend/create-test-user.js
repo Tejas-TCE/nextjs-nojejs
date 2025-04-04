@@ -6,6 +6,7 @@ import User from './models/User.js';
 dotenv.config();
 
 // Connect to MongoDB
+
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB Connected for test user creation'))
   .catch(err => console.error('MongoDB connection error:', err));

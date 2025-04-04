@@ -1,17 +1,24 @@
 "use client";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation"; // ✅ Added useRouter import
 import useAuthStore from "../store/useAuthStore";
-import { usePathname } from "next/navigation";
 
 const Navbar = () => {
-  const { isAuthenticated, logout } = useAuthStore();
+  const { isAuthenticated, logout } = useAuthStore(); // ✅ Zustand store access
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
-  
+  const router = useRouter(); // ✅ useRouter Hook
+
   // Don't show navbar on login and register pages
-  const hideNavbarPages = ['/login', '/register'];
+  const hideNavbarPages = ["/login", "/register"];
   const shouldHideNavbar = hideNavbarPages.includes(pathname);
+
+  // Logout function with redirect
+  const handleLogout = () => {
+    logout(); // Zustand store logout function
+    router.push("/login"); // ✅ Redirect to login after logout
+  };
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -62,7 +69,7 @@ const Navbar = () => {
                   Dashboard
                 </Link>
                 <button
-                  onClick={logout}
+                  onClick={handleLogout} // ✅ Now calling handleLogout
                   className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition duration-300"
                 >
                   Logout
@@ -117,7 +124,7 @@ const Navbar = () => {
                 </Link>
                 <button
                   onClick={() => {
-                    logout();
+                    handleLogout(); // ✅ Call handleLogout instead of logout directly
                     setIsMenuOpen(false);
                   }}
                   className="block w-full text-left text-white hover:bg-red-500 px-3 py-2 rounded-md"
@@ -150,4 +157,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar; 
+export default Navbar;
