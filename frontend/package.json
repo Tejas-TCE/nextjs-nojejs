@@ -11,6 +11,7 @@
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "axios": "^1.8.4",
+    "backend": "file:..",
     "clsx": "^2.1.0",
     "framer-motion": "^12.6.2",
     "next": "14.1.0",
