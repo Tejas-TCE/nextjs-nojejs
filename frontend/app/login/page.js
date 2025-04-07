@@ -4,6 +4,8 @@ import useAuthStore from "../../store/useAuthStore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+// ✅ React Toastify
+import { toast } from 'react-toastify';
 
 const Login = () => {
   const { login, error: storeError, loading, isAuthenticated } = useAuthStore();
@@ -28,12 +30,12 @@ const Login = () => {
 
     // Basic validation
     if (!email || !password) {
-      setFormError("Email and password are required");
+      toast.error("Email and password are required");
       return;
     }
 
     if (password.length < 6) {
-      setFormError("Password must be at least 6 characters");
+      toast.info("Password must be at least 6 characters");
       return;
     }
 
@@ -46,11 +48,11 @@ const Login = () => {
         console.log("Login successful, redirecting to dashboard");
         router.push("/dashboard");
       } else {
-        setFormError(result.message || "Login failed. Please try again.");
+        toast.error(result.message || "Login failed. Please try again.");
       }
     } catch (err) {
       console.error("Login error in component:", err);
-      setFormError("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.");
     }
   };
 
@@ -66,11 +68,11 @@ const Login = () => {
         </div>
 
         <div className="bg-white rounded-lg shadow-xl p-8">
-          {displayError && (
+          {/* {displayError && (
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
               {displayError}
             </div>
-          )}
+          )} */}
 
           <form onSubmit={handleLogin} suppressHydrationWarning>
             <div className="form-control">

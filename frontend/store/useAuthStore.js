@@ -1,10 +1,12 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
-const API_URL = 'http://localhost:5000/api/auth';
-const FAQ_URL = 'http://localhost:5000/api/faq';
+const API_URL = `${BASE_URL}/auth`;
+const FAQ_URL = `${BASE_URL}/faq`;
 
 const useAuthStore = create(
   persist(
@@ -43,6 +45,7 @@ const useAuthStore = create(
           });
 
           localStorage.setItem("token", response.data.token);
+          toast.success("Login successful!");
 
           return { success: true };
         } catch (error) {
@@ -58,6 +61,7 @@ const useAuthStore = create(
             error: errorMessage,
           });
 
+          toast.error(errorMessage);
           return { success: false, message: errorMessage };
         }
       },
@@ -69,14 +73,17 @@ const useAuthStore = create(
           const response = await axios.post(`${API_URL}/register`, userData);
 
           set({ loading: false, error: null });
+          toast.success(response.data.message || "Registration successful!");
           return { success: true, message: response.data.message };
         } catch (error) {
+          const errorMsg = error.response?.data?.message || 'Registration failed';
           set({
             loading: false,
-            error: error.response?.data?.message || 'Registration failed',
+            error: errorMsg,
           });
 
-          return { success: false, message: error.response?.data?.message || 'Registration failed' };
+          toast.error(errorMsg);
+          return { success: false, message: errorMsg };
         }
       },
 
@@ -89,8 +96,8 @@ const useAuthStore = create(
           error: null,
         });
         localStorage.removeItem("token");
-
-       
+        toast.info("You have been logged out");
+        //   
       },
 
       // ✅ CHANGE PASSWORD FUNCTION
@@ -105,14 +112,17 @@ const useAuthStore = create(
           },{ withCredentials: true });
 
           set({ loading: false, error: null });
+          toast.success(response.data.message || "Password changed successfully!");
           return { success: true, message: response.data.message };
         } catch (error) {
+          const errorMsg = error.response?.data?.message || 'Password change failed';
           set({
             loading: false,
-            error: error.response?.data?.message || 'Password change failed',
+            error: errorMsg,
           });
 
-          return { success: false, message: error.response?.data?.message || 'Password change failed' };
+          toast.error(errorMsg);
+          return { success: false, message: errorMsg };
         }
       },
 
@@ -150,11 +160,13 @@ const useAuthStore = create(
             // If token is invalid, clear it
             localStorage.removeItem("token");
             set({ isAuthenticated: false, token: null, user: null });
+            toast.error("Session expired. Please login again.");
             return false;
         } catch (error) {
             console.error("Auth check failed:", error);
             localStorage.removeItem("token");
             set({ isAuthenticated: false, token: null, user: null });
+            toast.error("Authentication failed. Please login again.");
             return false;
         }
     },
@@ -188,10 +200,12 @@ const useAuthStore = create(
           loading: false,
         });
       } catch (error) {
+        const errorMsg = error.response?.data?.message || "Failed to fetch FAQs";
         set({
           loading: false,
-          error: error.response?.data?.message || "Failed to fetch FAQs",
+          error: errorMsg,
         });
+        toast.error(errorMsg);
       }
     },
 
@@ -214,11 +228,14 @@ const useAuthStore = create(
           loading: false,
         }));
 
+        toast.success("FAQ added successfully");
         return { success: true, message: "FAQ added successfully" };
       } catch (error) {
-        set({ loading: false, error: error.response?.data?.message || 'Failed to add FAQ' });
-
-        return { success: false, message: error.response?.data?.message || 'Failed to add FAQ' };
+        const errorMsg = error.response?.data?.message || 'Failed to add FAQ';
+        set({ loading: false, error: errorMsg });
+        
+        toast.error(errorMsg);
+        return { success: false, message: errorMsg };
       }
     },
 
@@ -241,14 +258,17 @@ const useAuthStore = create(
           loading: false,
         }));
 
+        toast.success("FAQ permanently deleted");
         return { success: true, message: "FAQ permanently deleted" };
       } catch (error) {
+        const errorMsg = error.response?.data?.message || "Failed to delete FAQ";
         set({ 
           loading: false, 
-          error: error.response?.data?.message || "Failed to delete FAQ" 
+          // error: errorMsg 
         });
         
-        return { success: false, message: error.response?.data?.message || "Failed to delete FAQ" };
+        toast.error(errorMsg);
+        return { success: false, message: errorMsg };
       }
     },
     
@@ -271,14 +291,17 @@ const useAuthStore = create(
           loading: false,
         }));
 
+        toast.info("FAQ moved to trash");
         return { success: true, message: "FAQ moved to trash" };
       } catch (error) {
+        const errorMsg = error.response?.data?.message || "Failed to move FAQ to trash";
         set({ 
           loading: false, 
-          error: error.response?.data?.message || "Failed to move FAQ to trash" 
+          // error: errorMsg 
         });
         
-        return { success: false, message: error.response?.data?.message || "Failed to move FAQ to trash" };
+        toast.error(errorMsg);
+        return { success: false, message: errorMsg };
       }
     },
     
@@ -311,14 +334,17 @@ const useAuthStore = create(
           loading: false,
         });
 
+        toast.success("FAQ restored successfully");
         return { success: true, message: "FAQ restored successfully" };
       } catch (error) {
+        const errorMsg = error.response?.data?.message || "Failed to restore FAQ";
         set({ 
           loading: false, 
-          error: error.response?.data?.message || "Failed to restore FAQ" 
+          error: errorMsg 
         });
         
-        return { success: false, message: error.response?.data?.message || "Failed to restore FAQ" };
+        toast.error(errorMsg);
+        return { success: false, message: errorMsg };
       }
     },
     
@@ -343,10 +369,14 @@ const useAuthStore = create(
           loading: false,
         }));
 
+        toast.success("FAQ updated successfully");
         return { success: true, message: "FAQ updated successfully" };
       } catch (error) {
-        set({ loading: false, error: error.response?.data?.message || 'Failed to update FAQ' });
-        return { success: false, message: error.response?.data?.message || 'Failed to update FAQ' };
+        const errorMsg = error.response?.data?.message || 'Failed to update FAQ';
+        set({ loading: false, error: errorMsg });
+        
+        toast.error(errorMsg);
+        return { success: false, message: errorMsg };
       }
     },
   }),
@@ -355,37 +385,5 @@ const useAuthStore = create(
   }
 )
 );
-// DELIT FAQ
-
-  // deleteFAQ: async (id) => {
-  //   set({ loading: true, error: null });
-
-  //   try {
-  //       const token = localStorage.getItem("token");
-  //       if (!token) throw new Error("Token not found, please login again.");
-
-  //       await axios.delete(`${FAQ_URL}/delete/${id}`, {
-  //           headers: {
-  //               Authorization: `Bearer ${token}`,
-  //           },
-  //       });
-
-  //       // Zustand state માંથી FAQ ડિલિટ કરો
-  //       set((state) => ({
-  //           faqs: state.faqs.filter((faq) => faq._id !== id),
-  //           loading: false,
-  //       }));
-
-  //       return { success: true, message: "FAQ deleted successfully" };
-  //   } catch (error) {
-  //       set({ loading: false, error: error.response?.data?.message || 'Failed to delete FAQ' });
-
-  //       return { success: false, message: error.response?.data?.message || 'Failed to delete FAQ' };
-  //   }
-  // }
-
-
-
 
 export default useAuthStore;
-

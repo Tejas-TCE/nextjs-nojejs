@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react";
 import useAuthStore from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+
 import { FaPlus, FaEdit, FaTrash, FaSearch, FaChevronLeft, FaChevronRight, FaEye, FaEyeSlash, FaRecycle } from "react-icons/fa";
 
 export default function FAQPage() {
@@ -92,7 +94,7 @@ export default function FAQPage() {
       }
     } catch (error) {
       console.error("Error deleting FAQ:", error);
-    } finally {
+    }finally {
       setShowDeleteModal(false);
       setFaqToDelete(null);
     }
@@ -110,7 +112,7 @@ export default function FAQPage() {
         }
         fetchFAQs(currentPage, itemsPerPage, searchTerm, showDeleted);
       } else {
-        alert(result.message);
+        alert(`one ${result.message}`);
       }
     } catch (error) {
       console.error("Error soft deleting FAQ:", error);

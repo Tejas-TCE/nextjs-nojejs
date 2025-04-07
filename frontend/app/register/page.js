@@ -4,6 +4,10 @@ import useAuthStore from "../../store/useAuthStore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+// ✅ React Toastify
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const Register = () => {
   const { register, error, loading } = useAuthStore();
   const [name, setName] = useState("");
@@ -21,22 +25,22 @@ const Register = () => {
 
     // Validate passwords match
     if (password !== confirmPassword) {
-      setFormError("Passwords do not match");
+      toast.error("Passwords do not match");
       return;
     }
 
     try {
       const result = await register({ name, email, password });
       if (result.success) {
-        setSuccess(result.message || "Registration successful! You can now login.");
+        toast.success(result.message || "Registration successful! You can now login.");
         setTimeout(() => {
           router.push("/login");
         }, 2000);
       } else {
-        setFormError(result.message || "Registration failed. Please try again.");
+        toast.error(result.message || "Registration failed. Please try again.");
       }
     } catch (err) {
-      setFormError("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again."); // ❌ Error notification
       console.error(err);
     }
   };

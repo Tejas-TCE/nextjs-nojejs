@@ -1,14 +1,15 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "Sarvar.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon Sarvar.js"
+    "start": "node Sarvar.js",
+    "dev": "nodemon server.js" 
   },
-  "author": "",
+  "author": "tejas",
   "license": "ISC",
-  "description": "",
+  "description": "MERN-based authentication and user management system with integrated FAQ module for help and support.",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
